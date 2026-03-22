@@ -1,23 +1,21 @@
 # fly.toml for DNSTT server
-app = "dnstt-server"
-
+app = "dnstt-server-abdabdahfa"
 primary_region = "ams"
 
 [build]
   dockerfile = "Dockerfile"
 
-[service]
-  ports = [
-    { port = 53, protocol = "udp" },
-    { port = 8000, protocol = "tcp" }
-  ]
-  size = "shared-cpu-1x"
-  min_machines_running = 1
+[[services]]
+  internal_port = 53
+  protocol = "udp"
+  [[services.ports]]
+    port = 53
 
-  [[service.environment]]
-    name = "DOMAIN"
-    value = "t.example.com"  # change via fly secrets set DOMAIN=your.domain.com
+[[services]]
+  internal_port = 8000
+  protocol = "tcp"
+  [[services.ports]]
+    port = 8000
 
-[experimental]
-  allowed_public_ports = []
-  auto_rollback = true
+[env]
+  DOMAIN = "dns.example.com"

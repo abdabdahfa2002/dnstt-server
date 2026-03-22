@@ -1,0 +1,15 @@
+# Koyeb configuration for DNSTT server (TCP mode)
+name: dnstt-server-tcp
+services:
+  - name: dnstt-service
+    instance_type: nano
+    ports:
+      - port: 8000
+        protocol: tcp
+    env:
+      - key: DOMAIN
+        value: "dns.example.com" # Change this in Koyeb dashboard
+    regions:
+      - fra
+    docker:
+      dockerfile: Dockerfile

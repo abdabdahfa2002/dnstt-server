@@ -15,5 +15,7 @@ echo
 # Domain from environment
 : "${DOMAIN?environment variable DOMAIN is required (e.g., t.example.com)}"
 
-# Start server: listen on UDP 53 and TCP 8000, forward to 127.0.0.1:8000
-exec dnstt-server -udp :53 -tcp :8000 -privkey-file /etc/dnstt/server.key "$DOMAIN" 127.0.0.1:8000
+# Start server: listen on TCP port provided by Koyeb ($PORT or default 8000)
+: "${PORT:=8000}"
+echo "Starting dnstt-server on TCP port $PORT for domain $DOMAIN..."
+exec dnstt-server -tcp ":$PORT" -privkey-file /etc/dnstt/server.key "$DOMAIN" 127.0.0.1:8000

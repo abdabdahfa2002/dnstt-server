@@ -4,7 +4,7 @@ FROM golang:1.24-alpine AS builder
 WORKDIR /build
 RUN apk add --no-cache git
 RUN git clone https://www.bamsoftware.com/git/dnstt.git .
-RUN cd dnstt-server && GOOS=linux GOARCH=amd64 go build -o /dnstt-server .
+RUN cd dnstt-server && CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o /dnstt-server .
 
 FROM alpine:3.20
 RUN apk add --no-cache ca-certificates bind-tools  # bind-tools for dig healthcheck
