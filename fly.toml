@@ -4,40 +4,20 @@ app = "dnstt-server"
 primary_region = "ams"
 
 [build]
-  # Build from Dockerfile in repo root
   dockerfile = "Dockerfile"
 
-[http_service]
-  # Not used, but required by Fly for health checks
-  internal_port = 8080
-  min_machines_running = 1
-  processes = ["app"]
-
-  [[http_service.health_checks]]
-    interval = "30s"
-    timeout = "5s"
-    method = "get"
-    path = "/"
-
 [service]
-  # The dnstt server provides DNS over UDP and TCP
-  # It listens on port 53 for UDP DNS queries, and 8000 for TCP (DoT)
-  # Fly allows binding to privileged ports <1024.
   ports = [
     { port = 53, protocol = "udp" },
     { port = 8000, protocol = "tcp" }
   ]
-
-  # Run a small machine
   size = "shared-cpu-1x"
-
-  # Keep it running
   min_machines_running = 1
 
-  # Enable internal networking for health if needed
-  internal_http_checks = false
+  [[service.environment]]
+    name = "DOMAIN"
+    value = "t.example.com"  # change via fly secrets set DOMAIN=your.domain.com
 
 [experimental]
-  # Allow UDP (supported)
   allowed_public_ports = []
   auto_rollback = true
